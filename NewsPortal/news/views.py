@@ -8,7 +8,7 @@ from .models import Post
 
 class PostsList(ListView):
     model = Post
-    ordering = '-created_at'
+    ordering = 'created_at'
     template_name = 'news/posts.html'
     context_object_name = 'posts'
 
