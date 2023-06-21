@@ -67,7 +67,7 @@ class Post(models.Model):
         return self.post_text[:125] + '...'
 
     def __str__(self):
-        return f'{self.post_title} : {self.post_text[:20]}'
+        return f'{self.post_title} : {self.post_text[:20]}  ...'
 
 
 class PostCategory(models.Model):

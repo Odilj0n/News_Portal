@@ -1,0 +1,35 @@
+{% extends 'flatpages/default.html' %}
+
+{% load censor %}
+
+{% block title %}
+Новости
+{% endblock title %}
+
+{% block content %}
+<form action="/news/" method="get">
+       {{ filterset.form.as_p }}
+       <h1><input type="submit" value="Смотреть другие новости" /></h1>
+   </form>
+   <hr>
+   {% if post %}
+       <table>
+           <tr>
+               <td>автор</td>
+               <td>заголовок</td>
+               <td>дата публикации</td>
+               <td>новость</td>
+           </tr>
+
+           <tr>
+               <td>{{ post.author.user }}</td>
+               <td>{{ post.post_title }}</td>
+               <td>{{  post.created_at|date:'d.m.Y' }}</td>
+               <td>{{ post.post_text|censor }}</td>
+           </tr>
+
+       </table>
+   {% else %}
+       <h2>No news!</h2>
+   {% endif %}
+{% endblock content %}

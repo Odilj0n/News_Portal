@@ -1,0 +1,39 @@
+{% extends 'flatpages/default.html' %}
+
+{% load censor %}
+{% load custom_tags %}
+
+{% block title %}
+Все новости
+{% endblock title %}
+
+{% block content %}
+   <h2>Все Новости</h2>
+    <h3>{{ time_now|date:'d.m.Y.l.' }}</h3>
+
+   <form action="" method="get">
+       {{ filterset.form.as_p }}
+       <input type="submit" value="Найти" />
+   </form>
+
+   {% if news %}
+       <table>
+           <tr>
+               <td>автор</td>
+               <td>заголовок</td>
+               <td>дата публикации</td>
+               <td>содержания</td>
+           </tr>
+           {% for post in news %}
+           <tr>
+               <td>{{ post.author.user }}</td>
+               <td>{{ post.post_title }}</td>
+               <td>{{ post.created_at|date:'d.m.Y.l.G.i.s' }}</td>
+               <td>{{ post.post_text|truncatechars:20|censor }}</td>
+           </tr>
+           {% endfor %}
+       </table>
+   {% else %}
+       <h2>No news published!</h2>
+   {% endif %}
+{% endblock content %}
