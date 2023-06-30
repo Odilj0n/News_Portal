@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Sum
+from django.urls import reverse
 
 
 class Author(models.Model):
@@ -41,19 +42,19 @@ class Post(models.Model):
     TYPES = [(ART, 'Статья'), (NEWS, 'Новость')]
 
     # ID автора поста
-    author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE, verbose_name='Автор')
     # Тип поста (статья/новость)
-    post_type = models.CharField(max_length=10, choices=TYPES)
+    post_type = models.CharField(max_length=10, choices=TYPES, verbose_name='Тип поста')
     # Дата и время создания поста
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата публикации')
     # Категория поста
     post_category = models.ManyToManyField(Category)
     # Заголовок статьи/новости
-    post_title = models.CharField(max_length=120)
+    post_title = models.CharField(max_length=120, verbose_name='Заголовок')
     # Текст статьи/новости
-    post_text = models.TextField()
+    post_text = models.TextField(verbose_name='Содержание')
     # Рейтинг статьи/новости
-    post_rating = models.IntegerField(default=0)
+    post_rating = models.IntegerField(default=0, verbose_name='Рейтинг поста')
 
     def like(self):
         self.post_rating += 1
@@ -64,10 +65,13 @@ class Post(models.Model):
         self.save()
 
     def preview(self):
-        return self.post_text[:125] + '...'
+        return self.post_text[:125]
 
     def __str__(self):
-        return f'{self.post_title} : {self.post_text[:20]}  ...'
+        return f'{self.post_title} : {self.post_text[:20]}'
+
+    def get_absolute_url(self):
+        return reverse('post_detail', args=[str(self.id)])
 
 
 class PostCategory(models.Model):
