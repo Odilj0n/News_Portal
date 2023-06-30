@@ -1,8 +1,12 @@
 from datetime import datetime
 
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import Group
 from django.core.exceptions import ValidationError
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DeleteView, CreateView, UpdateView
+from django.views.generic import ListView, DeleteView, CreateView, UpdateView, DetailView
 
 from .filters import PostFilter
 from .forms import PostForm
@@ -27,6 +31,7 @@ class PostsList(ListView):
         context = super().get_context_data(**kwargs)
         context['time_now'] = datetime.utcnow()
         context['news'] = Post.objects.all()
+        context['is_not_author'] = not self.request.user.groups.filter(name='author').exists()
 
         return context
 
@@ -46,16 +51,24 @@ class PostSearch(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['filterset'] = self.filterset
+        context['is_not_author'] = not self.request.user.groups.filter(name='author').exists()
         return context
 
 
-class PostDetail(DeleteView):
+class PostDetail(DetailView):
     model = Post
     template_name = 'news/post.html'
     context_object_name = 'post'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_not_author'] = not self.request.user.groups.filter(name='author').exists()
+        return context
 
-class PostCreate(CreateView):
+
+class PostCreate(LoginRequiredMixin, CreateView):
+    permission_required = ('news.add_post',
+                           'news.change_post')
     model = Post
     form_class = PostForm
     template_name = 'news/post_create.html'
@@ -78,15 +91,43 @@ class PostCreate(CreateView):
         post.save()
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_not_author'] = not self.request.user.groups.filter(name='author').exists()
+        return context
 
-class PostDelete(DeleteView):
+
+class PostDelete(LoginRequiredMixin, DeleteView):
+    permission_required = ('news.delete_post',
+                           'news.change_post')
     model = Post
     template_name = 'news/post_delete.html'
     context_object_name = 'post_delete'
     success_url = reverse_lazy('post_list')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_not_author'] = not self.request.user.groups.filter(name='author').exists()
+        return context
 
-class PostUpdate(UpdateView):
+
+class PostUpdate(LoginRequiredMixin, UpdateView):
+    permission_required = ('news.add_post',
+                           'news.change_post')
     model = Post
     form_class = PostForm
     template_name = 'news/post_edit.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_not_author'] = not self.request.user.groups.filter(name='author').exists()
+        return context
+
+
+@login_required
+def upgrade_me(request):
+    user = request.user
+    author_group = Group.objects.get(name='author')
+    if not request.user.groups.filter(name='author').exists():
+        author_group.user_set.add(user)
+    return redirect('/')

@@ -32,6 +32,7 @@
    {% else %}
        <h2>No news!</h2>
    {% endif %}
-
+<a href="{%url 'news_edit' post.pk %}">Редактироват</a>
+<a href="{%url 'news_delete' post.pk %}">Удалит</a>
 
 {% endblock content %}

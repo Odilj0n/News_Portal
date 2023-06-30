@@ -39,6 +39,28 @@
                 <li class="nav-item">
                    <a class="nav-link" href="/article/create/">Опубликовать статью</a>
                </li>
+
+               <li>
+                   {% if is_not_author %}
+                    <button> <a href="/be_author/">
+                    Хочу стать автором!</a>
+                    </button>
+                    {% endif %}
+               </li>
+               <li>
+                   <span>{{ user.username }}</span>
+                   {% if user.is_authenticated %}
+                   <span><a href="{% url 'account_logout'%}"
+                      style="color: rgb(192, 192, 192); font-weight:700;position: absolute;right:0;top:0">
+                       Выйти
+                   </a></span>
+                   {% else %}
+                   <a href="{% url 'account_login'%}"
+                      style="color: rgb(0, 0, 255); font-weight:700;position: absolute;right:0;top:0">
+                       Войти
+                   </a>
+                   {% endif %}
+               </li>
            </ul>
        </div>
    </div>
@@ -52,6 +74,5 @@
                 {% endblock content%}
             </div>
         </div>
-
     </body>
 </html>

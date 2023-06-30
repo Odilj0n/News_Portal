@@ -5,17 +5,17 @@ from django.urls import reverse
 
 
 class Author(models.Model):
-
     # Модель содержащая объекты всех авторов
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)  # ID пользователя, который является автором
     author_rating = models.IntegerField(default=0)
 
     def update_rating(self):
-
         # Обновление и расчёт рейтинга
-        author_posts_rating = Post.objects.all().filter(author_id=self.pk).aggregate(posts_rating_sum=Sum('post_rating')*3)
-        author_comments_rating = Comment.objects.all().filter(user_id=self.user).aggregate(comments_rating_sum=Sum('comment_rating'))
+        author_posts_rating = Post.objects.all().filter(author_id=self.pk).aggregate(
+            posts_rating_sum=Sum('post_rating') * 3)
+        author_comments_rating = Comment.objects.all().filter(user_id=self.user).aggregate(
+            comments_rating_sum=Sum('comment_rating'))
 
         print(author_posts_rating)
         print(author_comments_rating)
@@ -101,3 +101,6 @@ class Comment(models.Model):
     def dislike(self):
         self.comment_rating -= 1
         self.save()
+
+
+
