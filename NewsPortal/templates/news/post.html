@@ -7,8 +7,8 @@
 {% endblock title %}
 
 {% block content %}
-<form action="" method="get">
-       {{ filterset.form.as_p }}
+<form action="http://127.0.0.1:8000/" method="get">
+
        <h1><input type="submit" value="Смотреть другие новости" /></h1>
    </form>
    <hr>
@@ -33,8 +33,5 @@
        <h2>No news!</h2>
    {% endif %}
 
-<li class="nav-item">
-                   <a class="nav-link" href='news/<int:pk>/delete/'>удалит</a>
-               </li>
 
 {% endblock content %}

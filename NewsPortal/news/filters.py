@@ -9,7 +9,7 @@ class PostFilter(FilterSet):
     created_at = DateTimeFilter(
         widget=forms.DateInput(attrs={'type': 'date'}),
         lookup_expr='date__gt',
-        label='дата публикации'
+        label='Непозднее'
     )
     post_PostCategory = ModelChoiceFilter(
         field_name='post_category__category_name',
