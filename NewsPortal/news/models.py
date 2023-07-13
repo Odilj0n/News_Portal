@@ -10,6 +10,9 @@ class Author(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)  # ID пользователя, который является автором
     author_rating = models.IntegerField(default=0)
 
+    def __str__(self):
+        return f'{self.user}'
+
     def update_rating(self):
         # Обновление и расчёт рейтинга
         author_posts_rating = Post.objects.all().filter(author_id=self.pk).aggregate(
@@ -28,6 +31,7 @@ class Category(models.Model):
     # Категории новостей/статей
 
     category_name = models.CharField(max_length=25, unique=True)  # Название категории
+    subscribers = models.ManyToManyField(User, related_name='categories')
 
     def __str__(self):
         return self.category_name
@@ -101,6 +105,3 @@ class Comment(models.Model):
     def dislike(self):
         self.comment_rating -= 1
         self.save()
-
-
-

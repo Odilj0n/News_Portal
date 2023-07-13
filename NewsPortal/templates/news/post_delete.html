@@ -7,7 +7,7 @@
     {% csrf_token %}
     <p>Вы уверены, что хотите удалить пост<br>
         "{{ object.post_title }}"?</p>
-    <input type="submit" value="Delete" />
+    <input type="submit" value="Удалит" />
     {% if is_not_author %}
             <button> <a href="/be_author/">
             Хочу стать автором!</a>

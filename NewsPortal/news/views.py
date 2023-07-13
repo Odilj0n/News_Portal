@@ -4,13 +4,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import Group
 from django.core.exceptions import ValidationError
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DeleteView, CreateView, UpdateView, DetailView
+from django.views.generic import ListView, DeleteView, CreateView, UpdateView, DetailView, TemplateView
 
 from .filters import PostFilter
 from .forms import PostForm
-from .models import Post
+from .models import Post, Category
 
 
 # Create your views here.
@@ -131,3 +131,40 @@ def upgrade_me(request):
     if not request.user.groups.filter(name='author').exists():
         author_group.user_set.add(user)
     return redirect('/')
+
+
+class Profile(LoginRequiredMixin, TemplateView):
+    template_name = 'news/profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_not_author'] = not self.request.user.groups.filter(name='authors').exists()
+        return context
+
+
+class CategoryListView(ListView):
+    model = Post
+    template_name = 'category_list.html'
+    context_object_name = 'category_post_list'
+
+    def get_queryset(self):
+        self.post_category = get_object_or_404(Category, id=self.kwargs['pk'])
+        queryset = Post.objects.filter(post_category=self.post_category)
+        #        queryset = Post.objects.filter(category=self.category).order_by('-date')
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_not_subscriber'] = self.request.user not in self.post_category.subscribers.all()
+        context['post_category'] = self.post_category
+        return context
+
+
+@login_required
+def subscribe(request, pk):
+    user = request.user
+    category = Category.objects.get(id=pk)
+    category.subscribers.add(user)
+
+    message = 'Вы подписались на рассылку новостей категории'
+    return render(request, 'subscribe.html', {'category': category, 'message': message})
