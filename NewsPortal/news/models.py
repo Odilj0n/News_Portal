@@ -31,10 +31,13 @@ class Category(models.Model):
     # Категории новостей/статей
 
     category_name = models.CharField(max_length=25, unique=True)  # Название категории
-    subscribers = models.ManyToManyField(User, related_name='categories')
+    subscribers = models.ManyToManyField(User, blank=True, related_name='categories')
 
     def __str__(self):
         return self.category_name
+
+    def get_categories_url(self):
+        return reverse('category_post_list', args=[str(self.id)])
 
 
 class Post(models.Model):

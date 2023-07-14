@@ -6,6 +6,7 @@ from django.contrib.auth.models import Group
 from django.core.exceptions import ValidationError
 from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse_lazy
+from django.views.decorators.csrf import csrf_protect
 from django.views.generic import ListView, DeleteView, CreateView, UpdateView, DetailView, TemplateView
 
 from .filters import PostFilter
@@ -144,7 +145,7 @@ class Profile(LoginRequiredMixin, TemplateView):
 
 class CategoryListView(ListView):
     model = Post
-    template_name = 'category_list.html'
+    template_name = 'news/category_list.html'
     context_object_name = 'category_post_list'
 
     def get_queryset(self):
@@ -161,10 +162,11 @@ class CategoryListView(ListView):
 
 
 @login_required
+@csrf_protect
 def subscribe(request, pk):
     user = request.user
     category = Category.objects.get(id=pk)
     category.subscribers.add(user)
+    message = 'Вы успешно подписались на рассылку новостей в категории '
 
-    message = 'Вы подписались на рассылку новостей категории'
-    return render(request, 'subscribe.html', {'category': category, 'message': message})
+    return render(request, 'news/subscribe.html', {'category': category, 'message': message})

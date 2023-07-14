@@ -26,7 +26,7 @@
                <td>{{ post.author.user }}</td>
                <td>{% for category in post.post_category.all %}
                         <a href="{% url 'category_list' category.id %}">{{ category }}</a>
-                    {% endfor %}
+                   {% endfor %}
                </td>
                <td><p class="link-read-post"><a href="{% url 'post_detail' post.pk %}">{{ post.post_title }}</a></p></td>
                <td>{{ post.created_at|date:'d.m.Y.l.G.i.s' }}</td>

@@ -1,6 +1,6 @@
 {% extends 'flatpages/default.html' %}
 
-{% load custom_filters %}
+{% load censor %}
 {% load custom_tags %}
 
 {% block title %}
@@ -13,7 +13,7 @@ News
         {% if is_not_subscriber %}
             <p class="text-center"><a href="{% url 'subscribe' category.id %}" class="btn btn-secondary btn-sn">Подписаться</a> </p>
         {% endif %}
-    <hr>
+
     {% if category_post_list %}
         <table>
             <tr>

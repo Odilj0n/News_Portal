@@ -15,7 +15,7 @@ urlpatterns = [
 
     path('upgrade/', upgrade_me, name='upgrade'),
 
-    path('profile/', Profile.as_view(), name= 'profile'),
+    path('profile/', Profile.as_view(), name=   'profile'),
     path('categories/<int:pk>', CategoryListView.as_view(), name='category_list'),
     path('categories/<int:pk>/subscribe', subscribe, name='subscribe')
 
