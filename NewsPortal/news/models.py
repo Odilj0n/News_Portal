@@ -55,7 +55,7 @@ class Post(models.Model):
     # Дата и время создания поста
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата публикации')
     # Категория поста
-    post_category = models.ManyToManyField(Category)
+    post_category = models.ManyToManyField(Category, through='PostCategory')
     # Заголовок статьи/новости
     post_title = models.CharField(max_length=120, verbose_name='Заголовок')
     # Текст статьи/новости
@@ -84,7 +84,7 @@ class Post(models.Model):
 class PostCategory(models.Model):
     # Промежуточная модель для связи "многие ко многим"
 
-    category_PostCategory = models.ManyToManyField(Category)
+    category_PostCategory = models.ForeignKey(Category, on_delete=models.CASCADE)
     post_PostCategory = models.ForeignKey(Post, on_delete=models.CASCADE)
 
 

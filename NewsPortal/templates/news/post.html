@@ -16,6 +16,7 @@
        <table>
            <tr>
                <td>автор</td>
+               <td>категория</td>
                <td>заголовок</td>
                <td>дата публикации</td>
                <td>новость</td>
@@ -23,6 +24,10 @@
 
            <tr>
                <td>{{ post.author.user }}</td>
+               <td>{% for category in post.post_category.all %}
+                        <a href="{% url 'category_list' category.id %}">{{ category }}</a>
+                   {% endfor %}
+               </td>
                <td>{{ post.post_title }}</td>
                <td>{{  post.created_at|date:'d.m.Y' }}</td>
                <td>{{ post.post_text|censor }}</td>

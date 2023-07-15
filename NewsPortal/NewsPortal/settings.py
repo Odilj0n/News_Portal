@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.flatpages',
 
 
-    'news',
+    'news.apps.NewsConfig',
     'accounts',
     'django_filters',
 
@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+
+    'django_apscheduler',
 ]
 
 MIDDLEWARE = [
@@ -102,9 +104,9 @@ SITE_ID = 1
 
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
-ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
 ACCOUNT_FORMS = {'signup': 'news.forms.CommonSignupForm'}
 
@@ -151,5 +153,15 @@ STATICFILES_DIRS = [
     BASE_DIR / "static"
 ]
 
+SITE_URL = 'http://127.0.0.1:8000/'
 
+EMAIL_HOST = 'smtp.mail.ru'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'odi.ev2000@mail.ru'
+EMAIL_HOST_PASSWORD = 'tqmKhFJsjyLNwjuixWVu'
+EMAIL_USE_SSL = True
+DEFAULT_FROM_EMAIL = 'odi.ev2000@mail.ru'
+
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
+APSCHEDULER_RUN_NOW_TIMEOUT = 25
 
