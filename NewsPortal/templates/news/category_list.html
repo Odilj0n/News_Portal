@@ -8,40 +8,31 @@ News
 {% endblock title %}
 
 {% block content %}
-    <h1> Новости категории {{ category }}: {{ news|length }} </h1>
+    <h1> Все новости категории {{ post_category }} </h1>
     <em>{% current_time %}</em>
         {% if is_not_subscriber %}
-            <p class="text-center"><a href="{% url 'subscribe' category.id %}" class="btn btn-secondary btn-sn">Подписаться</a> </p>
+            <p class="text-center"><a href="{% url 'subscribe' post_category.id %}" class="btn btn-secondary btn-sn">Подписаться</a> </p>
         {% endif %}
 
     {% if category_post_list %}
         <table>
             <tr>
-                <td> Заголовок </td>
-                <td> Тип </td>
-                <td> Категория </td>
-                <td> Дата публикации </td>
-                <td> Содержание </td>
                 <td> Автор </td>
+                <td> Категория </td>
+                <td> содержания </td>
+                <td> Дата публикации </td>
             </tr>
             {% for post in category_post_list %}
             <tr>
-                <td> {{ post.post_title }} </td>
-                <td> {% if post.post_type == 'NW' %}
-                      Новость
-                     {% elif post.post_type == 'AR' %}
-                      Статья
-                     {% endif %}
-                </td>
-                <td>
-                    {% for category in post.category.all %}
+               <td>{{ post.author.user }}</td>
+               <td>{% for category in post.post_category.all %}
                         <a href="{% url 'category_list' category.id %}">{{ category }}</a>
-                    {% endfor %}
-                </td>
-                <td> {{ post.created_at|date:'d M Y' }} </td>
-                <td> {{ post.post_text|truncatewords:20|censor }} </td>
-                <td> {{ post.author }} </td>
-            </tr>
+                   {% endfor %}
+               </td>
+               <td><p class="link-read-post"><a href="{% url 'post_detail' post.pk %}">{{ post.post_title }}</a></p></td>
+                <td>{{ post.post_text|truncatechars:20|censor }}</td>
+               <td>{{ post.created_at|date:'d.m.Y.l.' }}</td>
+           </tr>
             {% endfor %}
         </table>
     {% else %}
