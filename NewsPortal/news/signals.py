@@ -3,6 +3,8 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from django.core.mail import EmailMultiAlternatives, EmailMessage, send_mail
 from django.db.models.signals import m2m_changed, post_save
+from django.core.mail import EmailMultiAlternatives
+from django.db.models.signals import m2m_changed
 from django.dispatch import receiver
 from django.template.loader import render_to_string
 
@@ -12,7 +14,8 @@ from news.models import PostCategory
 
 def send_notifications(preview, pk, title, subscribers_emails):
     html_content = render_to_string(
-        'email/post_create_email.html',
+        'post_create_email.html',
+
         {
             'text': preview,
             'link': f'{SITE_URL}{pk}',
@@ -25,7 +28,8 @@ def send_notifications(preview, pk, title, subscribers_emails):
         subject=title,
         body='',
         from_email=DEFAULT_FROM_EMAIL,
-        to=subscribers_emails
+        to=subscribers_emails,
+
     )
 
     msg.attach_alternative(html_content, "text/html")
@@ -35,6 +39,7 @@ def send_notifications(preview, pk, title, subscribers_emails):
 @receiver(m2m_changed, sender=PostCategory)
 def notify_about_new_post(sender, instance, **kwargs):
     if kwargs['action'] == 'post_add':
+
         categories = instance.post_category.all()
         subscribers_emails = []
         for category in categories:
@@ -62,5 +67,3 @@ def welcome_email(sender, **kwargs):
     )
     msg.attach_alternative(html_content, 'text/html')
     msg.send()
-
-

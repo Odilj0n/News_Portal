@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.flatpages',
 
-
     'news.apps.NewsConfig',
     'accounts',
     'django_filters',
@@ -164,4 +163,3 @@ DEFAULT_FROM_EMAIL = 'odi.ev2000@mail.ru'
 
 APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
 APSCHEDULER_RUN_NOW_TIMEOUT = 25
-
