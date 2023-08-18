@@ -50,20 +50,21 @@ def notify_about_new_post(sender, instance, **kwargs):
         send_notifications(instance.preview(), instance.pk, instance.post_title, subscribers_emails)
 
 
-@receiver(user_signed_up)
-def welcome_email(sender, **kwargs):
-    user = kwargs['user']
-    html_content = render_to_string(
-        'email/welcome.html',
-        {
-            'text': f'{user.username}, Ваша регистрация прошла успешно!',
-        }
-    )
-    msg = EmailMultiAlternatives(
-        subject='Добро пожаловать!',
-        body='',
-        from_email=DEFAULT_FROM_EMAIL,
-        to=[user.email]
-    )
-    msg.attach_alternative(html_content, 'text/html')
-    msg.send()
+@receiver(post_save, sender=User)
+def welcome_email(created, **kwargs):
+    instance = kwargs['instance']
+    if created:
+        html_content = render_to_string(
+            'email/welcome.html',
+            {
+                'text': f'{instance.username}, Ваша регистрация прошла успешно!',
+            }
+        )
+        msg = EmailMultiAlternatives(
+            subject='Добро пожаловать!',
+            body='',
+            from_email=DEFAULT_FROM_EMAIL,
+            to=[instance.email]
+        )
+        msg.attach_alternative(html_content, 'text/html')
+        msg.send()
