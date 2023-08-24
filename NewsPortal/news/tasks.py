@@ -59,7 +59,7 @@ def weekly_email_job():
 @shared_task
 def notify_about_new_post(pk):
     post = Post.objects.get(pk=pk)
-    categories = post.category_PostCategory.all()
+    categories = post.post_category.all()
     title = post.post_title
     subscribers = []
     for category in categories:
@@ -67,7 +67,7 @@ def notify_about_new_post(pk):
         for user in sub:
             subscribers.append(user.email)
     html_context = render_to_string(
-        'post_created_email.html',
+        'post_create_email.html',
         {
             'text': news.models.Post.post_title,
             'link': f'{settings.SITE_URL}/{pk}'
