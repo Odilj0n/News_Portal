@@ -8,7 +8,7 @@ from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse_lazy
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic import ListView, DeleteView, CreateView, UpdateView, DetailView, TemplateView
-
+from .tasks import notify_about_new_post
 from .filters import PostFilter
 from .forms import PostForm
 from .models import Post, Category
@@ -90,6 +90,7 @@ class PostCreate(LoginRequiredMixin, CreateView):
                 )
 
         post.save()
+        notify_about_new_post.delay(post.pk)
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
