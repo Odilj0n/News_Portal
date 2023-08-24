@@ -42,18 +42,7 @@ def weekly_email_job():
             msg.send()
 
 
-# @shared_task
-# def notify_about_new_post(sender, instance, **kwargs):
-#     if kwargs['action'] == 'post_add':
-#
-#         categories = instance.post_category.all()
-#         subscribers_emails = []
-#         for category in categories:
-#             subscribers = category.subscribers.all()
-#
-#             subscribers_emails += [s.email for s in subscribers]
-#
-#         send_notifications(instance.preview(), instance.pk, instance.post_title, subscribers_emails)
+
 
 
 @shared_task
